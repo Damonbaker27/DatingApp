@@ -27,10 +27,11 @@ export class AppComponent implements OnInit {
   }
 
   setCurrentUser(){
+    //check if user already exists in local storage
     const userString = localStorage.getItem('user');
 
     if(!userString) return;
-    const user: User =JSON.parse(userString);
+    const user: User = JSON.parse(userString);
     this.accountService.setCurrentUser(user);
   }
 
