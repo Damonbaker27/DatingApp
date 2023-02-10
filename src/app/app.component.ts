@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { User } from './_models/user';
 import { AccountService } from './_services/account.service';
@@ -12,19 +11,12 @@ export class AppComponent implements OnInit {
   title = 'Dating app';
   users: any[] | undefined;
 
-  constructor(private http:HttpClient, private accountService :AccountService){}
+  constructor(private accountService :AccountService){}
 
   ngOnInit(): void {
-    this.getUsers();
     this.setCurrentUser();
   }
 
-  getUsers(){
-    this.http.get<any>('https://localhost:7296/api/Users/').subscribe(response =>{
-      this.users = response;
-      console.log(response);
-    })
-  }
 
   setCurrentUser(){
     //check if user already exists in local storage
