@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AccountService } from '../_services/account.service';
+import { AccountService } from '../../_services/account.service';
 
 @Component({
   selector: 'app-register',
@@ -21,7 +21,7 @@ export class RegisterComponent {
         this.cancel();
       },
       error: error => console.log(error)
-    });
+    })
   }
 
   cancel(){
