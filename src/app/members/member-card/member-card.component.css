@@ -26,3 +26,14 @@
   margin-right: auto;
   opacity: 0;
 }
+
+
+.card-img-wrapper:hover .member-icons  {
+  bottom: 0;
+  opacity: 1;
+
+}
+
+.animate {
+  transition: all 0.3s ease-in-out;
+}
