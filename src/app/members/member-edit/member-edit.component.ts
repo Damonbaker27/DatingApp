@@ -20,7 +20,7 @@ export class MemberEditComponent implements OnInit {
     })
   }
   ngOnInit(): void {
-
+    this.loadMember();
   }
 
   loadMember(){
