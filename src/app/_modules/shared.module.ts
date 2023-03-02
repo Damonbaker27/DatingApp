@@ -4,6 +4,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 
+
+
 @NgModule({
   declarations: [],
   imports: [
@@ -18,7 +20,8 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
   exports:[
     BsDropdownModule,
     ToastrModule,
-    TabsModule
+    TabsModule,
+
   ]
 })
 export class SharedModule { }

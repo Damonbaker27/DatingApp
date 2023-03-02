@@ -11,11 +11,16 @@ import { MembersService } from 'src/app/_services/members.service';
 export class MemberDetailComponent implements OnInit {
   member: Member | undefined;
 
+
   constructor(private memberService: MembersService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.loadMember();
+
+
   }
+
+
 
 
   loadMember(){
