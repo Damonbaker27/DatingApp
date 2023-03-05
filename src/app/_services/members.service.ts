@@ -35,7 +35,13 @@ export class MembersService {
   }
 
   updateMember(member: Member){
-    return this.http.put(this.baseUrl + 'users', member);
+    return this.http.put(this.baseUrl + 'users', member).pipe(
+      map(() =>{
+        const index = this.members.indexOf(member);
+        // update the cached members array during update.
+        this.members[index] = {...this.members[index],...member}
+      })
+    )
   }
 
 }
