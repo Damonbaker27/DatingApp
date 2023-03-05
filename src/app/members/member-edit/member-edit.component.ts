@@ -22,7 +22,9 @@ export class MemberEditComponent implements OnInit {
       $event.returnValue = true;
     }
   }
+
   member :Member | undefined;
+
   user: User | null = null;
 
   constructor(private accountService: AccountService,
