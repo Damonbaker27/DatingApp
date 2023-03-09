@@ -43,9 +43,9 @@
         <p>{{member.interests}}</p>
       </tab>
       <tab heading="Photos">
-        <div class="row" *ngIf="member">
+        <div class="row">
           <div class="col-2" *ngFor="let photo of member.photos">
-            <img src="{{photo.url}}" alt="photo of user" class="img mb-1">
+            <img src="{{photo.url}}" alt="photo of user" class="img">
             <div class="text-center">
               <button class="btn btn-sm">Main</button>
               <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
