@@ -12,9 +12,10 @@
     </label>
   </div>
 
+  <app-text-input [formControl]="$any(registerForm.controls['username'])" [label]="'Username'"></app-text-input>
   <app-text-input [formControl]="$any(registerForm.controls['knownAs'])" [label]="'Preferred Name'"></app-text-input>
 
-  <app-text-input [formControl]="$any(registerForm.controls['dateOfBirth'])" [label]="'Date of Birth'" [type]="'date'"></app-text-input>
+  <app-date-picker [formControl]="$any(registerForm.controls['dateOfBirth'])" [label]="'Date of Birth'" [maxDate]="maxDate"></app-date-picker>
 
   <app-text-input [formControl]="$any(registerForm.controls['city'])" [label]="'City'"></app-text-input>
 
