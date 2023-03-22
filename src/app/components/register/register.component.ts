@@ -1,7 +1,10 @@
+import { ThisReceiver } from '@angular/compiler';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Member } from 'src/app/_models/member';
+import { MembersService } from 'src/app/_services/members.service';
 import { AccountService } from '../../_services/account.service';
 
 @Component({
@@ -13,12 +16,11 @@ export class RegisterComponent implements OnInit {
 
   @Output() cancelRegister = new EventEmitter();
   registerForm: FormGroup = new FormGroup({});
-  model: any = {};
   maxDate: Date = new Date();
   validationErrors: string[] | undefined;
 
   constructor(private accountService: AccountService, private toastr: ToastrService,
-    private fb: FormBuilder, private router: Router) {}
+    private fb: FormBuilder, private router: Router, private memberService: MembersService) {}
 
   ngOnInit(): void {
     this.initializeForm();
@@ -50,9 +52,13 @@ export class RegisterComponent implements OnInit {
   }
 
   register(){
-    this.accountService.register(this.model).subscribe({
+    const dob = this.getDateOnly(this.registerForm.controls['dateOfBirth'].value)
+    //using spread operator to update date of birth value.
+    const values = {...this.registerForm.value, dateOfBirth: dob}
+
+    this.accountService.register(values).subscribe({
       next: () =>{
-        this.router.navigateByUrl('/members')
+        this.router.navigateByUrl('/members');
       },
       error: (error)=> {
         this.validationErrors = error;
@@ -63,5 +69,17 @@ export class RegisterComponent implements OnInit {
 
   cancel(){
     this.cancelRegister.emit(false);
+  }
+
+  //turn datetime into dateonly
+  private getDateOnly(dob: string | undefined){
+    if(!dob) return;
+    //create a new date object
+    let theDob = new Date(dob);
+
+    //this is wild but it removes the timezone offset then slices off the first 10 characters.
+    return new Date(theDob.setMinutes(theDob.getMinutes()- theDob.getTimezoneOffset()))
+    .toISOString().slice(0,10);
+
   }
 }

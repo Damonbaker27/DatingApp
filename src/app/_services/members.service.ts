@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { map, of } from 'rxjs';
 import { Environment } from '../enviorments/environment';
 import { Member } from '../_models/member';
+import { User } from '../_models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,7 @@ export class MembersService {
   updateMember(member: Member){
     return this.http.put(this.baseUrl + 'users', member).pipe(
       map(() =>{
+        //get index of member to be updated in array
         const index = this.members.indexOf(member);
         // update the cached members array during update.
         this.members[index] = {...this.members[index],...member}
@@ -52,6 +54,7 @@ export class MembersService {
   deletePhoto(photoId: number){
     return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
   }
+
 
 
 }
