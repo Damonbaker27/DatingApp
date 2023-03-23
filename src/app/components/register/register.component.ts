@@ -20,7 +20,7 @@ export class RegisterComponent implements OnInit {
   validationErrors: string[] | undefined;
 
   constructor(private accountService: AccountService, private toastr: ToastrService,
-    private fb: FormBuilder, private router: Router, private memberService: MembersService) {}
+    private fb: FormBuilder, private router: Router) {}
 
   ngOnInit(): void {
     this.initializeForm();

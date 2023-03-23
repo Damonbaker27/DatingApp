@@ -42,7 +42,8 @@ initilizeUploader(){
   // configure uploader settings
   this.uploader = new FileUploader({
     url: this.baseUrl + "users/add-photo",
-    // not using jwt interceptor so token is needed here.
+
+    // not using jwt interceptor so token is added here.
     authToken: 'Bearer '+ this.user?.token,
     isHTML5: true,
     allowedFileType: ['image'],
@@ -62,6 +63,11 @@ initilizeUploader(){
       const photo = JSON.parse(response);
       //add returned photo to member photo array
       this.member?.photos.push(photo);
+      //update user photo to the new one if its the first.
+      if(photo.isMain && this.user && this.member){
+        this.user.photoUrl = photo.url;
+        this.member.photoUrl= photo.url;
+      }
     }
   }
 }
