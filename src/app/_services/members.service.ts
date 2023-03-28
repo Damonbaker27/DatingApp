@@ -10,39 +10,52 @@ import { User } from '../_models/user';
   providedIn: 'root'
 })
 export class MembersService {
-  baseUrl = Environment.apiUrl;
 
+  baseUrl = Environment.apiUrl;
   members: Member[] = [];
   paginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>;
+
 
   constructor(private http :HttpClient) {}
 
   getMembers(pageNumber?: number, pageSize?: number){
+
     let queryParams = new HttpParams();
 
+    //add pagination information to params
     if(pageNumber && pageSize){
       queryParams = queryParams.append('pageNumber', pageNumber);
       queryParams = queryParams.append('pageSize', pageSize);
     }
 
-    //return an observable of this members array
-    if(this.members.length > 0){
-      return of(this.members)
-    }
+    return this.http.get<Member[]>(this.baseUrl + 'users', { observe: 'response', params: queryParams }).pipe(
+      map(response =>{
 
-    console.log(this.baseUrl + 'users', queryParams);
-    //add the returned data to the members array
-    return this.http.get<Member[]>(this.baseUrl + 'users', { params: queryParams } ).pipe(
-      // map(members => {
-      //   this.members = members;
-      //   return members;
-      //})
+        //set result to response body containing members.
+        if(response.body){
+          this.paginatedResult.result = response.body
+        }
+
+        //retrive the pagination header
+        const pagination = response.headers.get('Pagination')
+
+        if(pagination){
+          //turn the json header into an object
+          this.paginatedResult.pagination = JSON.parse(pagination)
+        }
+
+        return this.paginatedResult;
+      })
+
     )
+
   }
 
   getMember(username: string){
     const member = this.members.find(x => x.userName == username);
-    if(member) return of(member);
+    if(member){
+      return of(member);
+    }
 
     return this.http.get<Member>(this.baseUrl + 'users/' + username);
   }
