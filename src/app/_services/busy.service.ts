@@ -19,8 +19,11 @@ export class BusyService {
   }
 
   idle(){
+    //decrement the counter
     this.busyRequestCount--;
+
     if(this.busyRequestCount <= 0){
+      //set the counter to zero so theres no negative values
       this.busyRequestCount = 0;
       this.spinnerService.hide();
     }
