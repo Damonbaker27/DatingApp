@@ -15,7 +15,6 @@ export class MembersService {
   members: Member[] = [];
   paginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>;
 
-
   constructor(private http :HttpClient) {}
 
   getMembers(pageNumber?: number, pageSize?: number){

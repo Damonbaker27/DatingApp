@@ -37,6 +37,12 @@ export class AccountService {
     )
   }
 
+  deleteAccount(){
+
+  }
+
+
+
   setCurrentUser(user :User){
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
