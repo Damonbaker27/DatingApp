@@ -32,7 +32,7 @@
           <button [disabled]="!editForm.dirty"
           type="submit" form="editForm"
           class="btn btn-success col-12">Save Changes</button>
-          <button class="btn btn-danger col-12 mt-1" (click)="">Delete Account</button>
+          <button class="btn btn-danger col-12 mt-1" (click)="deleteAccount(member.userName)">Delete Account</button>
         </div>
 
       </div>

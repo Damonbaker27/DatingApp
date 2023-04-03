@@ -37,11 +37,6 @@ export class AccountService {
     )
   }
 
-  deleteAccount(){
-
-  }
-
-
 
   setCurrentUser(user :User){
     localStorage.setItem('user', JSON.stringify(user));
@@ -52,6 +47,16 @@ export class AccountService {
     this.currentUserSource.next(null);
     localStorage.removeItem('user');
   }
+
+  deleteAccount(username: string){
+    console.log
+    return this.http.delete(this.baseUrl + 'account/delete/'+ username,{responseType: "text"}).subscribe({
+      next: response => console.log(response),
+      error: error => console.log(error)
+    })
+  }
+
+
 
 
 }

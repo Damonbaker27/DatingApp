@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
 import { Member } from 'src/app/_models/member';
@@ -27,7 +28,7 @@ export class MemberEditComponent implements OnInit {
 
   user: User | null = null;
 
-  constructor(private accountService: AccountService,
+  constructor(private accountService: AccountService, private router: Router,
     private memberService: MembersService, private toast: ToastrService) {
 
       this.accountService.currentUser$.pipe(take(1)).subscribe({
@@ -56,7 +57,17 @@ export class MemberEditComponent implements OnInit {
     })
   }
 
+  deleteAccount(username: string){
 
+    if(confirm("are you sure you want to delete?" + username)){
+      this.router.navigateByUrl('/');
+      this.accountService.logout();
+      this.accountService.deleteAccount(username);
+      this.toast.success("profile was deleted successfully.");
+
+    }
+
+  }
 
 
 }
