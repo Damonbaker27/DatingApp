@@ -5,6 +5,7 @@ import { Environment } from '../enviorments/environment';
 import { Member } from '../_models/member';
 import { PaginatedResult } from '../_models/pagination';
 import { User } from '../_models/user';
+import { userParams } from '../_models/userParams';
 
 @Injectable({
   providedIn: 'root'
@@ -17,14 +18,14 @@ export class MembersService {
 
   constructor(private http :HttpClient) {}
 
-  getMembers(pageNumber?: number, pageSize?: number){
+  getMembers(userParams: userParams){
 
     let queryParams = new HttpParams();
 
     //add pagination information to params
-    if(pageNumber && pageSize){
-      queryParams = queryParams.append('pageNumber', pageNumber);
-      queryParams = queryParams.append('pageSize', pageSize);
+    if(userParams.pageNumber && userParams.pageSize){
+      queryParams = queryParams.append('pageNumber', userParams.pageNumber);
+      queryParams = queryParams.append('pageSize', userParams.pageSize);
     }
 
     return this.http.get<Member[]>(this.baseUrl + 'users', { observe: 'response', params: queryParams }).pipe(
