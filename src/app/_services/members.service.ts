@@ -23,10 +23,7 @@ export class MembersService {
     let queryParams = new HttpParams();
 
     //add pagination information to params
-    if(userParams.pageNumber && userParams.pageSize){
-      queryParams = queryParams.append('pageNumber', userParams.pageNumber);
-      queryParams = queryParams.append('pageSize', userParams.pageSize);
-    }
+    queryParams = this.getParams(userParams, queryParams);
 
     return this.http.get<Member[]>(this.baseUrl + 'users', { observe: 'response', params: queryParams }).pipe(
       map(response =>{
@@ -49,6 +46,17 @@ export class MembersService {
 
     )
 
+  }
+
+  private getParams(userParams: userParams, queryParams: HttpParams) {
+    if (userParams.pageNumber && userParams.pageSize) {
+      queryParams = queryParams.append('pageNumber', userParams.pageNumber);
+      queryParams = queryParams.append('pageSize', userParams.pageSize);
+      queryParams = queryParams.append('minAge', userParams.minAge);
+      queryParams = queryParams.append('maxAge', userParams.maxAge);
+      queryParams = queryParams.append('gender', userParams.gender);
+    }
+    return queryParams;
   }
 
   getMember(username: string){

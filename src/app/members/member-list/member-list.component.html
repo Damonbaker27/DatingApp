@@ -2,6 +2,21 @@
   <div class="col-2" *ngFor="let member of members">
     <app-member-card [member]="member"></app-member-card>
   </div>
+
+<div class="container mb-2" *ngIf="userParams">
+  <form #form (submit)="loadMember()" autocomplete="off">
+    <div class="d-flex">
+      <label class = col-form-label>Age Range:</label>
+      <input type="number" class="form-control" min="18" style="width: 80px;" name="minAge" [(ngModel)]="userParams.minAge">
+      <input type="number" class="form-control" style="width: 80px;" name="maxAge" [(ngModel)]="userParams.maxAge">
+      </div>
+      <div>
+      <button type="submit" class="btn btn-primary">Filter</button>
+    </div>
+  </form>
+</div>
+
+
   <pagination *ngIf="pagination"
   [boundaryLinks]="true"
   [totalItems]="pagination.totalItems"

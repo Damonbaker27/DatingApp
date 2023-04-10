@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, map, take } from 'rxjs';
 import { Environment } from '../enviorments/environment';
 import { User } from '../_models/user';
 
@@ -37,6 +37,9 @@ export class AccountService {
     )
   }
 
+  getCurrentUser(){
+    return this.currentUser$.pipe(take(1));
+  }
 
   setCurrentUser(user :User){
     localStorage.setItem('user', JSON.stringify(user));

@@ -8,6 +8,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
+
 @NgModule({
   declarations: [],
   imports: [
@@ -22,7 +23,8 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
     }),
     FileUploadModule,
     BsDatepickerModule.forRoot(),
-    PaginationModule.forRoot()
+    PaginationModule.forRoot(),
+    BsDropdownModule.forRoot()
   ],
 
   exports:[
@@ -32,7 +34,8 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
     NgxSpinnerModule,
     FileUploadModule,
     BsDatepickerModule,
-    PaginationModule
+    PaginationModule,
+    BsDropdownModule
   ]
 })
 export class SharedModule { }
