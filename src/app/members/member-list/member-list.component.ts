@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Member } from 'src/app/_models/member';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
+import { userParams } from 'src/app/_models/userParams';
 import { MembersService } from 'src/app/_services/members.service';
 
 @Component({
@@ -15,23 +16,29 @@ export class MemberListComponent implements OnInit {
   members: Member[] = [];
   pagination: Pagination | undefined;
   pageNumber = 1;
-  pageSize = 2;
+  pageSize = 4;
+  userParams: userParams = new userParams();
 
-  constructor(private memberService : MembersService) {}
+
+  constructor(private memberService : MembersService) {
+    this.userParams.pageNumber = this.pageNumber;
+    this.userParams.pageSize = this.pageSize;
+  }
 
   ngOnInit(): void {
     this.loadMember();
   }
 
   loadMember(){
-    this.memberService.getMembers(this.pageNumber, this.pageSize).subscribe({
+    if(this.userParams != null){
+    this.memberService.getMembers(this.userParams).subscribe({
       next: response =>{
         if(response.result && response.pagination){
           this.members = response.result;
           this.pagination = response.pagination;
         }
       }
-    })
+    })}
   }
 
   pageChanged(event: any){

@@ -1,7 +1,7 @@
-export interface userParams{
-  gender: string;
-  pageNumber: number;
-  pageSize: number;
-  minAge: number;
-  maxAge: number;
+export class userParams{
+  gender: string | undefined;
+  pageNumber: number | undefined;
+  pageSize: number| undefined;
+  minAge: number| undefined;
+  maxAge: number| undefined;
 }
