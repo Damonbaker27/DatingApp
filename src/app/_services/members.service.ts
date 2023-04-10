@@ -19,7 +19,6 @@ export class MembersService {
   constructor(private http :HttpClient) {}
 
   getMembers(userParams: userParams){
-
     let queryParams = new HttpParams();
 
     //add pagination information to params
@@ -27,25 +26,19 @@ export class MembersService {
 
     return this.http.get<Member[]>(this.baseUrl + 'users', { observe: 'response', params: queryParams }).pipe(
       map(response =>{
-
         //set result to response body containing members.
         if(response.body){
           this.paginatedResult.result = response.body
         }
-
         //retrive the pagination header
         const pagination = response.headers.get('Pagination')
-
         if(pagination){
           //turn the json header into an object
           this.paginatedResult.pagination = JSON.parse(pagination)
         }
-
         return this.paginatedResult;
       })
-
     )
-
   }
 
   private getParams(userParams: userParams, queryParams: HttpParams) {
@@ -64,7 +57,6 @@ export class MembersService {
     if(member){
       return of(member);
     }
-
     return this.http.get<Member>(this.baseUrl + 'users/' + username);
   }
 
