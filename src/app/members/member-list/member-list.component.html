@@ -1,46 +1,66 @@
-<div class="row">
-  <div class="col-2" *ngFor="let member of members">
-    <app-member-card [member]="member"></app-member-card>
+<div class="text-center mt-3">
+  <h2>Your Matches - {{pagination?.totalItems}}</h2>
+</div>
+
+<div class="container mt-3" *ngIf="userParams">
+  <form class="d-flex mb-3" #form="ngForm" (submit)="loadMember()" autocomplete="off">
+
+    <div class="d-flex mx-2">
+      <label class = "col-form-label me-2">Age Range:</label>
+      <input type="number"
+      required minlength="1"
+      class="form-control"
+      min="18"
+      style="width: 65px;"
+      name="minAge"
+      required
+      minlength="1"
+      [(ngModel)]="userParams.minAge">
+    </div>
+
+
+    <div class="d-flex mx-2">
+      <label class = "col-form-label me-2">to</label>
+      <input type="number"
+      class="form-control"
+      max="100"
+      style="width: 65px;"
+      name="maxAge"
+      [(ngModel)]="userParams.maxAge">
+    </div>
+
+    <div class="d-flex px-2">
+      <label class = "col-form-label me-2 mb-2"> Display Gender:</label>
+
+        <select name="gender" style ="width: 160px" class="form-select ms-1" [(ngModel)]="userParams.gender">
+          <option *ngFor="let gender of genderList" value="{{gender.value}}">{{gender.display}}</option>
+        </select>
+
+      <button type="submit" class="btn btn-primary ms-1">Apply Filters</button>
+      <button (click)="resetFilters()" class="btn btn-danger">Reset</button>
+    </div>
+
+    <div class="d-flex px-2">
+      <label class = "col-form-label me-2 mb-2"> Items per page:</label>
+        <select name="itemsPerPage" style ="width: 65px" class="form-select ms-1" [(ngModel)]="userParams.pageSize">
+          <option *ngFor="let value of pageSizeList" value="{{value.value}}">{{value.value}}</option>
+        </select>
+    </div>
+    <div class="d-flex px-2">
+      <label class = "col-form-label me-2 mb-2"> Sort By:</label>
+        <select name="orderBy" style ="width: 75px" class="form-select ms-1" [(ngModel)]="userParams.orderBy">
+          <option *ngFor="let order of orderByList" value="{{order.value}}">{{order.display}}</option>
+        </select>
+    </div>
+  </form>
+
+
+  <div class="row">
+    <div class="col-2" *ngFor="let member of members">
+      <app-member-card [member]="member"></app-member-card>
   </div>
 
-  <div class="container mb-2" *ngIf="userParams">
-    <form #form (submit)="loadMember()" autocomplete="off">
-      <div class="d-flex">
-
-        <div class="d-flex mx-2">
-          <label class = "col-form-label me-2">Age Range:</label>
-          <input type="number"
-          class="form-control"
-          min="18"
-          style="width: 80px;"
-          name="minAge"
-          [(ngModel)]="userParams.minAge">
-        </div>
-
-        <div class="d-flex mx-2">
-          <label class = "col-form-label me-2">to</label>
-          <input type="number"
-          class="form-control"
-          max="100"
-          style="width: 80px;"
-          name="maxAge"
-          [(ngModel)]="userParams.maxAge">
-        </div>
-
-
-      </div>
-      <div class="d-flex px-2">
-        <label class="col-form-label me-2">
-          <select name="gender" style ="width: 130px" class="form-select" [(ngModel)]="userParams.gender">
-            <option *ngFor="let gender of genderList" value="{{gender.value}}"> {{gender.display}}</option>
-          </select>
-        </label>
-        <button type="submit" class="btn btn-primary">Filter</button>
-      </div>
-    </form>
-  </div>
-
-  <pagination *ngIf="pagination"
+  <pagination class="d-flex justify-content-center" *ngIf="pagination"
     [boundaryLinks]="true"
     [totalItems]="pagination.totalItems"
     [itemsPerPage]="pagination.itemsPerPage"
@@ -52,17 +72,5 @@
     firstText="&laquo;"
     lastText="&raquo;">
   </pagination>
-
-  <div class="container d-flex" *ngIf="userParams">
-    <form #paginationForm (submit)="loadMember()">
-      <label class = "col-form-label me-2">Items Per Page:</label>
-      <input type="number" class="form-control"
-      min="1"
-      max="15"
-      style="width: 80px;"
-      name="minAge"
-      [(ngModel)]="userParams.pageSize">
-    </form>
-  </div>
-
 </div>
+

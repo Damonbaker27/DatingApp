@@ -14,31 +14,60 @@ export class MembersService {
 
   baseUrl = Environment.apiUrl;
   members: Member[] = [];
+  memberCache = new Map();
   paginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>;
+  count = 0;
 
   constructor(private http :HttpClient) {}
 
   getMembers(userParams: userParams){
+    const response = this.memberCache.get(Object.values(userParams).join('-'));
+    console.log(response)
+
+    if(response){
+      console.log("cached response")
+      console.log(this.memberCache);
+      return of(response);
+    }
+
     let queryParams = new HttpParams();
 
     //add pagination information to params
     queryParams = this.getParams(userParams, queryParams);
 
+    return this.getPaginationHeaders(queryParams).pipe(
+      map(paginatedResult =>{
+
+        //console.log(Object.values(userParams).join('-') + "-> " + paginatedResult.result?.length)
+        //console.log("not cached response")
+
+        //this.memberCache.set(Object.values(userParams).join('-'), paginatedResult);
+
+        //console.log(this.memberCache);
+
+        return paginatedResult;
+
+      })
+
+    );
+  }
+
+  private getPaginationHeaders(queryParams: HttpParams) {
     return this.http.get<Member[]>(this.baseUrl + 'users', { observe: 'response', params: queryParams }).pipe(
-      map(response =>{
+      map(response => {
         //set result to response body containing members.
-        if(response.body){
-          this.paginatedResult.result = response.body
+        if (response.body) {
+          this.paginatedResult.result = response.body;
         }
         //retrive the pagination header
-        const pagination = response.headers.get('Pagination')
-        if(pagination){
+        const pagination = response.headers.get('Pagination');
+        if (pagination) {
           //turn the json header into an object
-          this.paginatedResult.pagination = JSON.parse(pagination)
+          this.paginatedResult.pagination = JSON.parse(pagination);
         }
         return this.paginatedResult;
       })
-    )
+    );
   }
 
   private getParams(userParams: userParams, queryParams: HttpParams) {
@@ -48,6 +77,7 @@ export class MembersService {
       queryParams = queryParams.append('minAge', userParams.minAge);
       queryParams = queryParams.append('maxAge', userParams.maxAge);
       queryParams = queryParams.append('gender', userParams.gender);
+      queryParams = queryParams.append('orderBy', userParams.orderBy);
     }
     return queryParams;
   }

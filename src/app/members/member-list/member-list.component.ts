@@ -19,7 +19,10 @@ export class MemberListComponent implements OnInit {
   pagination: Pagination | undefined;
   userParams: userParams | undefined;
   user: User | null = null;
-  genderList = [{value: 'male', display: 'Males'},{value: 'female', display: 'Females'}]
+  genderList = [{value: 'Male', display: 'Males'},{value: 'Female', display: 'Females'}]
+
+  pageSizeList = [{value: '5'},{value: '10'},{value: '30'}]
+  orderByList = [{value: 'lastActive', display: 'Last Active'},{value: 'new', display: 'New'}]
 
   constructor(private memberService : MembersService, private accountService: AccountService ) {
     this.accountService.getCurrentUser().subscribe({
@@ -45,7 +48,8 @@ export class MemberListComponent implements OnInit {
 
   loadMember(){
     if(this.userParams != null){
-      console.log(this.userParams)
+      //console.log("userParams")
+      //console.log(this.userParams)
     this.memberService.getMembers(this.userParams).subscribe({
       next: response =>{
         if(response.result && response.pagination){
