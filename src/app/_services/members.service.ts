@@ -6,6 +6,7 @@ import { Member } from '../_models/member';
 import { PaginatedResult } from '../_models/pagination';
 import { User } from '../_models/user';
 import { userParams } from '../_models/userParams';
+import { AccountService } from './account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,17 +17,42 @@ export class MembersService {
   members: Member[] = [];
   memberCache = new Map();
   paginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>;
+  user: User | undefined;
+  userParams: userParams | undefined;
   count = 0;
+  firstCheck: PaginatedResult<Member[]> | undefined;
 
-  constructor(private http :HttpClient) {}
+  constructor(private http :HttpClient, private accountService: AccountService) {
+    accountService.getCurrentUser().subscribe({
+      next: user => {
+        if(user){
+          this.userParams = new userParams(user);
+          this.user = user;
+        }
+      }
+    })
+  }
+
+
+  getUserParams(){
+    return this.userParams;
+  }
+
+  setUserParams(userParams: userParams){
+    this.userParams = userParams;
+  }
+
+  resetParams(){
+    if(this.user){
+      this.userParams = new userParams(this.user);
+    }
+  }
 
   getMembers(userParams: userParams){
     const response = this.memberCache.get(Object.values(userParams).join('-'));
-    console.log(response)
 
+    console.log(response)
     if(response){
-      console.log("cached response")
-      console.log(this.memberCache);
       return of(response);
     }
 
@@ -38,13 +64,7 @@ export class MembersService {
     return this.getPaginationHeaders(queryParams).pipe(
       map(paginatedResult =>{
 
-        //console.log(Object.values(userParams).join('-') + "-> " + paginatedResult.result?.length)
-        //console.log("not cached response")
-
         //this.memberCache.set(Object.values(userParams).join('-'), paginatedResult);
-
-        //console.log(this.memberCache);
-
         return paginatedResult;
 
       })

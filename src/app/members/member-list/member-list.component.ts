@@ -14,7 +14,6 @@ import { MembersService } from 'src/app/_services/members.service';
 })
 export class MemberListComponent implements OnInit {
 
-  //members$: PaginatedResult<Member> | Observable<PaginatedResult<Member[]>>;
   members: Member[] = [];
   pagination: Pagination | undefined;
   userParams: userParams | undefined;
@@ -24,15 +23,8 @@ export class MemberListComponent implements OnInit {
   pageSizeList = [{value: '5'},{value: '10'},{value: '30'}]
   orderByList = [{value: 'lastActive', display: 'Last Active'},{value: 'new', display: 'New'}]
 
-  constructor(private memberService : MembersService, private accountService: AccountService ) {
-    this.accountService.getCurrentUser().subscribe({
-      next: user => {
-        this.user = user;
-        if(this.user){
-          this.userParams = new userParams(this.user);
-        }
-      }
-    })
+  constructor(private memberService : MembersService) {
+    this.userParams = this.memberService.getUserParams();
   }
 
   ngOnInit(): void {
@@ -40,16 +32,13 @@ export class MemberListComponent implements OnInit {
   }
 
   resetFilters(){
-    if(this.user){
-      this.userParams = new userParams(this.user);
-      this.loadMember();
-    }
+    this.memberService.resetParams()
+    this.userParams = this.memberService.getUserParams();
+    this.loadMember();
   }
 
   loadMember(){
     if(this.userParams != null){
-      //console.log("userParams")
-      //console.log(this.userParams)
     this.memberService.getMembers(this.userParams).subscribe({
       next: response =>{
         if(response.result && response.pagination){
