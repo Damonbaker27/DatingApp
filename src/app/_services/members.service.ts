@@ -20,7 +20,7 @@ export class MembersService {
   user: User | undefined;
   userParams: userParams | undefined;
   count = 0;
-  firstCheck: PaginatedResult<Member[]> | undefined;
+  newPaginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>;
 
   constructor(private http :HttpClient, private accountService: AccountService) {
     accountService.getCurrentUser().subscribe({
@@ -51,7 +51,7 @@ export class MembersService {
   getMembers(userParams: userParams){
     const response = this.memberCache.get(Object.values(userParams).join('-'));
 
-    console.log(response)
+    console.log(this.memberCache)
     if(response){
       return of(response);
     }
@@ -64,7 +64,11 @@ export class MembersService {
     return this.getPaginationHeaders(queryParams).pipe(
       map(paginatedResult =>{
 
-        //this.memberCache.set(Object.values(userParams).join('-'), paginatedResult);
+        this.newPaginatedResult = new PaginatedResult<Member[]>;
+        this.newPaginatedResult.pagination =paginatedResult.pagination;
+        this.newPaginatedResult.result = paginatedResult.result;
+
+        this.memberCache.set(Object.values(userParams).join('-'),  this.newPaginatedResult);
         return paginatedResult;
 
       })
