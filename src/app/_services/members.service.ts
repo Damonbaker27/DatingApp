@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, of } from 'rxjs';
+import { find, map, of } from 'rxjs';
 import { Environment } from '../enviorments/environment';
 import { Member } from '../_models/member';
 import { PaginatedResult } from '../_models/pagination';
@@ -19,8 +19,7 @@ export class MembersService {
   paginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>;
   user: User | undefined;
   userParams: userParams | undefined;
-  count = 0;
-  newPaginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>;
+  //newPaginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>;
 
   constructor(private http :HttpClient, private accountService: AccountService) {
     accountService.getCurrentUser().subscribe({
@@ -51,7 +50,6 @@ export class MembersService {
   getMembers(userParams: userParams){
     const response = this.memberCache.get(Object.values(userParams).join('-'));
 
-    console.log(this.memberCache)
     if(response){
       return of(response);
     }
@@ -64,16 +62,50 @@ export class MembersService {
     return this.getPaginationHeaders(queryParams).pipe(
       map(paginatedResult =>{
 
-        this.newPaginatedResult = new PaginatedResult<Member[]>;
-        this.newPaginatedResult.pagination =paginatedResult.pagination;
-        this.newPaginatedResult.result = paginatedResult.result;
+        let newPaginatedResult = new PaginatedResult<Member[]>;
+        newPaginatedResult.pagination =paginatedResult.pagination;
+        newPaginatedResult.result = paginatedResult.result;
 
-        this.memberCache.set(Object.values(userParams).join('-'),  this.newPaginatedResult);
+        this.memberCache.set(Object.values(userParams).join('-'),  newPaginatedResult);
         return paginatedResult;
 
       })
 
     );
+  }
+
+
+  getMember(username: string){
+    //flatten the 2 arrays into one for searching.
+    const member = [...this.memberCache.values()]
+    .reduce((arr, element) => arr.concat(element.result), []).
+    find((member:Member)=> member.userName == username);
+
+    if(member){
+      return of(member);
+    }
+
+    return this.http.get<Member>(this.baseUrl + 'users/' + username);
+  }
+
+  updateMember(member: Member){
+    return this.http.put(this.baseUrl + 'users', member).pipe(
+      map(() =>{
+        //get index of member to be updated in array
+        const index = this.members.indexOf(member);
+        // update the cached members array during update.
+        this.members[index] = {...this.members[index],...member}
+      })
+    )
+  }
+
+  setMainPhoto(photoId :number){
+    return this.http.put(this.baseUrl + 'users/set-main-photo/' + photoId, {});
+  }
+
+
+  deletePhoto(photoId: number){
+    return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
   }
 
   private getPaginationHeaders(queryParams: HttpParams) {
@@ -105,35 +137,6 @@ export class MembersService {
     }
     return queryParams;
   }
-
-  getMember(username: string){
-    const member = this.members.find(x => x.userName == username);
-    if(member){
-      return of(member);
-    }
-    return this.http.get<Member>(this.baseUrl + 'users/' + username);
-  }
-
-  updateMember(member: Member){
-    return this.http.put(this.baseUrl + 'users', member).pipe(
-      map(() =>{
-        //get index of member to be updated in array
-        const index = this.members.indexOf(member);
-        // update the cached members array during update.
-        this.members[index] = {...this.members[index],...member}
-      })
-    )
-  }
-
-  setMainPhoto(photoId :number){
-    return this.http.put(this.baseUrl + 'users/set-main-photo/' + photoId, {});
-  }
-
-
-  deletePhoto(photoId: number){
-    return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
-  }
-
 
 
 }
