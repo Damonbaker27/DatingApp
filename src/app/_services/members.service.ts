@@ -75,6 +75,14 @@ export class MembersService {
   }
 
 
+  addLike(username: string){
+    return this.http.post(this.baseUrl + 'likes/' + username, {}, {responseType:'text'});
+  }
+
+  getLikes(predicate: string){
+    return this.http.get(this.baseUrl + 'likes?predicate=' + predicate, {responseType:'text'})
+  }
+
   getMember(username: string){
     //flatten the 2 arrays into one for searching.
     const member = [...this.memberCache.values()]
