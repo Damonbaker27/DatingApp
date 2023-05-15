@@ -7,6 +7,7 @@ import { PaginatedResult } from '../_models/pagination';
 import { User } from '../_models/user';
 import { userParams } from '../_models/userParams';
 import { AccountService } from './account.service';
+import { MemberEditComponent } from '../members/member-edit/member-edit.component';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,6 @@ export class MembersService {
   paginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>;
   user: User | undefined;
   userParams: userParams | undefined;
-  //newPaginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>;
 
   constructor(private http :HttpClient, private accountService: AccountService) {
     accountService.getCurrentUser().subscribe({
@@ -70,7 +70,6 @@ export class MembersService {
         return paginatedResult;
 
       })
-
     );
   }
 
@@ -79,8 +78,8 @@ export class MembersService {
     return this.http.post(this.baseUrl + 'likes/' + username, {}, {responseType:'text'});
   }
 
-  getLikes(predicate: string){
-    return this.http.get(this.baseUrl + 'likes?predicate=' + predicate, {responseType:'text'})
+  getLikes(predicate: string) {
+    return this.http.get<Member[]>(this.baseUrl + 'likes?predicate=' + predicate)
   }
 
   getMember(username: string){
