@@ -13,8 +13,6 @@ export class ListsComponent {
   members: Member[] | undefined;
   predicate = 'liked';
 
-
-
   constructor(private memberService: MembersService){
     this.loadLikes();
   }
